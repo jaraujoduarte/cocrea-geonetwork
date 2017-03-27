@@ -24,6 +24,9 @@ echo "Setting environment variables for Java 7.."
 sudo apt-get install -y oracle-java7-set-default
 
 sudo cp /vagrant/geonetwork/geonetwork.war /var/lib/tomcat7/webapps/
+sudo cp -f /vagrant/webCustom/web.xml /var/lib/tomcat7/webapps/geonetwork/WEB-INF/
+sudo cp /vagrant/webCustom/geosource-8.xml /var/lib/tomcat7/webapps/geonetwork/WEB-INF/config-node/
+
 cd /etc/default
 rm tomcat7
 sudo cp /vagrant/tomcat7 /etc/default/
