@@ -1,0 +1,34 @@
+tomcat:
+  # 'no' means that the installation package will be copied from the Ansible controller machine
+  # 'yes' means that the package is already on the appsever or that the download wil be executed from the appserver
+  remote: no
+  version: apache-tomcat-7.0.77
+  home: /opt/tomcat
+  java_vm_ms: 512M
+  java_vm_mx: 1024M
+  # If remote is 'no' then location will be the location on the Ansible controller machine
+  # of the file to be copied to the appserver
+  #package_location: http://apache.xl-mirror.nl/tomcat/tomcat-7/v7.0.77/bin/apache-tomcat-7.0.77.tar.gz
+  package_location: /vagrant_share/tmp/apache-tomcat-7.0.77.tar.gz
+  admin_username: admin
+  admin_password: admin
+geonetwork:
+  redeploy: no
+  # 'no' means that the installation package will be copied from the Ansible controller machine
+  # 'yes' means that the .war is already on the appsever or that the download wil be executed from the appserver
+  remote: no
+  # If remote is 'no' then location will be the location on the Ansible controller machine
+  # of the file to be copied to the appserver
+  #package_location: http://downloads.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v3.2.1/geonetwork.war
+  package_location: /vagrant_share/tmp/geonetwork.war
+  home: /geohome
+  tomcat_dir: "{{ tomcat['home'] }}/webapps/geonetwork"
+  log:
+    file: /geohome/geonetwork.log
+  db:
+    name: h2
+    username: admin
+    password: gnos
+    host: localhost
+    port: 5432
+    database: /geohome/geonetwork

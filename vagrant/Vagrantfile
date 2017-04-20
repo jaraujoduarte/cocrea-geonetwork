@@ -1,0 +1,55 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$copy_node_ssh_keys = <<-SCRIPT
+sudo mkdir /keys
+nodes=(appserver)
+
+for i in "${nodes[@]}"
+do
+	sudo cp /vagrant_share/vagrant/.vagrant/machines/$i/virtualbox/private_key /keys/private_key_$i
+done
+
+sudo chown -R vagrant:vagrant /keys
+sudo chmod 600 /keys/*
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+  config.vm.box_check_update = false
+  config.vbguest.auto_update = false
+  config.vm.synced_folder "../", "/vagrant", type: "virtualbox", disabled: true
+	config.vm.provider :virtualbox do |vb|
+		vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+		vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+	end
+
+  config.vm.define "appserver" do |appserver|
+		appserver.vm.provider :virtualbox do |vb|
+			vb.memory = 1024
+	    vb.cpus = 2
+		end
+    appserver.vm.network "private_network", ip: "10.0.0.21"
+  end
+
+  # Using ubuntu for provisioning as folder sharing is easier due to the lack of
+  # guest additions on the regular centos/7 box
+  config.vm.define "provisioner" do |provisioner|
+    provisioner.vm.box = "ubuntu/trusty64"
+    provisioner.vm.synced_folder "../", "/vagrant_share", type: "virtualbox"
+	  provisioner.vm.hostname = "provisioner"
+		provisioner.vm.network "private_network", ip: "10.0.0.11"
+
+    provisioner.vm.provision "shell", inline: $copy_node_ssh_keys
+    provisioner.vm.provision "ansible_local" do |ansible|
+      ansible.verbose = "-v"
+			ansible.install_mode = "pip"
+			ansible.version = "2.2.1.0"
+      ansible.limit = "all"
+      ansible.provisioning_path = "/vagrant_share"
+      ansible.playbook = "ansible/main.yml"
+      ansible.inventory_path = "vagrant/ansible_config/inventory"
+      ansible.config_file = "vagrant/ansible_config/ansible.cfg"
+    end
+	end
+end

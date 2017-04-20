@@ -1,0 +1,81 @@
+- name: Install dependency packages
+  yum: name="{{ item }}" state=present
+  become: true
+  with_items:
+    - "httpd"
+    - "java-1.8.0-openjdk.x86_64"
+    - "unzip"
+
+- name: Add tomcat group
+  group: name=tomcat state=present
+  become: true
+
+- name: Add tomcat user
+  user:
+    name: tomcat
+    group: tomcat
+    shell: /bin/nologin
+    home: /opt/tomcat
+  become: true
+
+- name: Obtain and decompress tomcat
+  unarchive:
+    src: "{{ tomcat['package_location'] }}"
+    dest: /tmp
+    remote_src: "{{ tomcat['remote'] }}"
+  become: true
+
+- name: Copy tomcat to its home
+  shell: "cp -R /tmp/{{ tomcat['version'] }}/* {{ tomcat['home'] }}"
+  become: true
+
+- name: Copy tomcat admin user configuration
+  template:
+    src: tomcat-users.xml.j2
+    dest: "{{ tomcat['home']}}/conf/tomcat-users.xml"
+  become: true
+
+- name: Set tomcat user as owner of tomcat related files
+  file:
+    path: "{{ tomcat['home'] }}"
+    owner: tomcat
+    group: tomcat
+    recurse: yes
+    mode: 'g+rw'
+  become: true
+
+- name: Permissions tomcat conf and bin content
+  file:
+    path: "{{ tomcat['home'] }}/{{ item }}"
+    mode: 'g+r'
+    recurse: yes
+  become: true
+  with_items:
+    - conf
+    - bin
+
+- name: Permissions tomcat conf and bin folder
+  file:
+    path: "{{ tomcat['home'] }}/{{ item }}"
+    mode: 'g+rwx'
+  become: true
+  with_items:
+    - conf
+    - bin
+
+- name: Create tomcat systemd unit
+  template:
+    src: tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+  become: true
+
+- name: Reload systemd daemon
+  shell: "systemctl daemon-reload"
+  become: true
+
+- name: Start tomcat service
+  systemd:
+    name: tomcat
+    state: started
+    enabled: yes
+  become: true
