@@ -25,9 +25,15 @@
     remote_src: "{{ tomcat['remote'] }}"
   become: true
 
+- name: Check if tomcat has been installed already.
+  stat:
+    path: "{{ tomcat['home'] }}"
+  register: tomcat_install_path_status
+
 - name: Copy tomcat to its home
   shell: "cp -R /tmp/{{ tomcat['version'] }}/* {{ tomcat['home'] }}"
   become: true
+  when: tomcat_install_path_status.stat.isdir is not defined
 
 - name: Copy tomcat admin user configuration
   template:
