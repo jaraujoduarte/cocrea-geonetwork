@@ -1,0 +1,7 @@
+- src: https://github.com/geerlingguy/ansible-role-mysql
+  version: master
+  name: mysql
+
+- src: https://github.com/geerlingguy/ansible-role-solr
+  version: master
+  name: solr
