@@ -12,6 +12,8 @@ tomcat:
   package_location: /vagrant_share/tmp/apache-tomcat-7.0.77.tar.gz
   admin_username: admin
   admin_password: admin
+
+
 geonetwork:
   redeploy: no
   # 'no' means that the installation package will be copied from the Ansible controller machine
@@ -26,9 +28,16 @@ geonetwork:
   log:
     file: /geohome/geonetwork.log
   db:
-    name: h2
+    name: mysql
     username: admin
     password: gnos
-    host: localhost
-    port: 5432
-    database: /geohome/geonetwork
+    host: 10.0.0.22
+    # current version of geonetwork ignores this - port hard coded
+    port: 3306
+    database: geonetwork
+    # name: h2
+    # username: admin
+    # password: gnos
+    # host: localhost
+    # port: 5432
+    # database: /geohome/geonetwork
