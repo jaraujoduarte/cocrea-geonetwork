@@ -1,0 +1,8 @@
+---
+- hosts: solrservers
+  pre_tasks:
+    - name: Install Java
+      yum: name="java-1.8.0-openjdk.x86_64" state=present
+      become: true
+  roles:
+    - solr

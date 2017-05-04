@@ -1,4 +1,9 @@
 ---
+- hosts: dbservers
+  roles:
+    - mysql
+    - solr
+
 - hosts: appservers
   roles:
     - appserver

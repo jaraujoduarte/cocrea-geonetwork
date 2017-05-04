@@ -41,3 +41,7 @@ geonetwork:
     # host: localhost
     # port: 5432
     # database: /geohome/geonetwork
+  solr:
+    # Should match the information on group_vars/solrservers
+    url: 10.0.0.22:8983
+    collection: collection1
