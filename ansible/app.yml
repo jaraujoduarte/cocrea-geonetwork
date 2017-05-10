@@ -2,3 +2,7 @@
 - hosts: appservers
   roles:
     - geonetwork
+<<<<<<< Updated upstream
+=======
+  become: true
+>>>>>>> Stashed changes

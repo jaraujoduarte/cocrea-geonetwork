@@ -1,10 +1,16 @@
 ---
 - hosts: dbservers
+  pre_tasks:
+    - name: Install Java
+      yum: name="java-1.8.0-openjdk.x86_64" state=present
+      become: true
   roles:
     - mysql
     - solr
+  become: true
 
 - hosts: appservers
   roles:
     - appserver
     - geonetwork
+  become: true

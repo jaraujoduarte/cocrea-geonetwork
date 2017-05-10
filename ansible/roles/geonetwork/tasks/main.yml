@@ -2,7 +2,6 @@
   systemd:
     name: tomcat
     state: stopped
-  become: true
 
 - name: Create home folder for geonetwork related data, config, etc
   file:
@@ -11,45 +10,45 @@
     owner: tomcat
     group: tomcat
     mode: 'g+rw'
-  become: true
 
 - name: Create folder for geonetwork app
   file:
     path: "{{ geonetwork['tomcat_dir'] }}"
     state: directory
-  become: true
+
+- name: Check if geonetwork has been deployed already.
+  find:
+    paths: "{{ tomcat['home'] }}/webapps/geonetwork"
+    file_type: directory
+    patterns: "*"
+  register: geonetwork_dir_files
 
 - name: Obtain and decompress geonetwork
   unarchive:
     src: "{{ geonetwork['package_location'] }}"
     dest: "{{ geonetwork['tomcat_dir'] }}"
     remote_src: "{{ geonetwork['remote'] }}"
-  when: geonetwork["redeploy"]
-  become: true
+  when: geonetwork["redeploy"] or geonetwork_dir_files.matched|int == 0
 
 - name: Copy srv.xml
   template:
     src: srv.xml.j2
     dest: "{{ geonetwork['tomcat_dir'] }}/WEB-INF/config-node/srv.xml"
-  become: true
 
 - name: Copy jdbc.properties
   template:
     src: jdbc.properties.j2
     dest: "{{ geonetwork['tomcat_dir'] }}/WEB-INF/config-db/jdbc.properties"
-  become: true
 
 - name: Copy config-solr.properties
   template:
     src: config-solr.properties.j2
     dest: "{{ geonetwork['tomcat_dir'] }}/WEB-INF/config-solr.properties"
-  become: true
 
 - name: Copy log4j.xml
   template:
     src: log4j.xml.j2
     dest: "{{ geonetwork['tomcat_dir'] }}/WEB-INF/classes/log4j.xml"
-  become: true
 
 - name: Set tomcat user as owner of geonetwork related files in tomcat dir
   file:
@@ -58,7 +57,6 @@
     group: tomcat
     recurse: yes
     mode: 'g+rw'
-  become: true
 
 - name: Restart tomcat service
   systemd:

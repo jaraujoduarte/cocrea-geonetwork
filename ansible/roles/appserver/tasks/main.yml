@@ -8,38 +8,37 @@
 
 - name: Add tomcat group
   group: name=tomcat state=present
-  become: true
 
 - name: Add tomcat user
   user:
     name: tomcat
     group: tomcat
     shell: /bin/nologin
-    home: /opt/tomcat
-  become: true
 
 - name: Obtain and decompress tomcat
   unarchive:
     src: "{{ tomcat['package_location'] }}"
     dest: /tmp
     remote_src: "{{ tomcat['remote'] }}"
-  become: true
 
 - name: Check if tomcat has been installed already.
   stat:
-    path: "{{ tomcat['home'] }}"
+    path: "{{ tomcat['home'] }}/conf"
+  register: tomcat_install_path_status
+
+- name: Check if tomcat has been installed already.
+  stat:
+    path: "{{ tomcat['home'] }}/conf"
   register: tomcat_install_path_status
 
 - name: Copy tomcat to its home
   shell: "cp -R /tmp/{{ tomcat['version'] }}/* {{ tomcat['home'] }}"
-  become: true
   when: tomcat_install_path_status.stat.isdir is not defined
 
 - name: Copy tomcat admin user configuration
   template:
     src: tomcat-users.xml.j2
     dest: "{{ tomcat['home']}}/conf/tomcat-users.xml"
-  become: true
 
 - name: Set tomcat user as owner of tomcat related files
   file:
@@ -48,14 +47,12 @@
     group: tomcat
     recurse: yes
     mode: 'g+rw'
-  become: true
 
 - name: Permissions tomcat conf and bin content
   file:
     path: "{{ tomcat['home'] }}/{{ item }}"
     mode: 'g+r'
     recurse: yes
-  become: true
   with_items:
     - conf
     - bin
@@ -64,7 +61,6 @@
   file:
     path: "{{ tomcat['home'] }}/{{ item }}"
     mode: 'g+rwx'
-  become: true
   with_items:
     - conf
     - bin
@@ -73,15 +69,12 @@
   template:
     src: tomcat.service.j2
     dest: /etc/systemd/system/tomcat.service
-  become: true
 
 - name: Reload systemd daemon
   shell: "systemctl daemon-reload"
-  become: true
 
 - name: Start tomcat service
   systemd:
     name: tomcat
     state: started
     enabled: yes
-  become: true

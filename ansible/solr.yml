@@ -6,3 +6,4 @@
       become: true
   roles:
     - solr
+  become: true
