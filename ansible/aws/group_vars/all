@@ -1,8 +1,8 @@
 m_access_key: "ACCESS_KEY"
 m_secret_key: "SECRET_KEY"
+m_vpc_id: vpc-f6fc429f
 m_region: eu-west-2
 m_keyname: geonetwork-london
-m_vpc_id: vpc-f6fc429f
 
 ec2_instance_type: t2.micro
 ec2_image: ami-9c363cf8
