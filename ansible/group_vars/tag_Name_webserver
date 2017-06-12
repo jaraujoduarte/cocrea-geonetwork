@@ -1,0 +1,5 @@
+apache:
+  # When using vagrant
+  appserver_url: http://10.0.0.21:8080
+  # When not using vagrant
+  #appserver_url: http://ip-172-31-14-247.eu-west-2.compute.internal:8080

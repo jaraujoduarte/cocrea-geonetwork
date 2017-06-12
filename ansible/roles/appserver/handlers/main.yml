@@ -1,0 +1,8 @@
+---
+- name: restart tomcat
+  systemd:
+    name: tomcat
+    state: restarted
+
+- name: reload systemd daemon
+  shell: "systemctl daemon-reload"

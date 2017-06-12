@@ -11,6 +11,14 @@
     group: tomcat
     mode: 'g+rw'
 
+- name: Create data dir for geonetwork
+  file:
+    path: "{{ geonetwork['home'] }}/data"
+    state: directory
+    owner: tomcat
+    group: tomcat
+    mode: 'g+rw'
+
 - name: Create folder for geonetwork app
   file:
     path: "{{ geonetwork['tomcat_dir'] }}"

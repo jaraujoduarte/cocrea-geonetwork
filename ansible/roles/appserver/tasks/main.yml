@@ -1,10 +1,10 @@
 - name: Install dependency packages
   yum: name="{{ item }}" state=present
-  become: true
   with_items:
     - "httpd"
     - "java-1.8.0-openjdk.x86_64"
     - "unzip"
+    - "subversion"
 
 - name: Add tomcat group
   group: name=tomcat state=present
@@ -15,30 +15,37 @@
     group: tomcat
     shell: /bin/nologin
 
+- name: Check if tomcat has been installed already.
+  stat:
+    path: "{{ tomcat['home'] }}/conf"
+  register: tomcat_install_path_status
+
 - name: Obtain and decompress tomcat
   unarchive:
     src: "{{ tomcat['package_location'] }}"
     dest: /tmp
     remote_src: "{{ tomcat['remote'] }}"
+  when: tomcat_install_path_status.stat.isdir is not defined
 
-- name: Check if tomcat has been installed already.
-  stat:
-    path: "{{ tomcat['home'] }}/conf"
-  register: tomcat_install_path_status
-
-- name: Check if tomcat has been installed already.
-  stat:
-    path: "{{ tomcat['home'] }}/conf"
-  register: tomcat_install_path_status
+- name: Create tomcat home folder
+  file:
+    path: "{{ tomcat['home'] }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
 
 - name: Copy tomcat to its home
   shell: "cp -R /tmp/{{ tomcat['version'] }}/* {{ tomcat['home'] }}"
   when: tomcat_install_path_status.stat.isdir is not defined
+  notify:
+    - restart tomcat
 
 - name: Copy tomcat admin user configuration
   template:
     src: tomcat-users.xml.j2
     dest: "{{ tomcat['home']}}/conf/tomcat-users.xml"
+  notify:
+    - restart tomcat
 
 - name: Set tomcat user as owner of tomcat related files
   file:
@@ -69,9 +76,9 @@
   template:
     src: tomcat.service.j2
     dest: /etc/systemd/system/tomcat.service
-
-- name: Reload systemd daemon
-  shell: "systemctl daemon-reload"
+  notify:
+    - reload systemd daemon
+    - restart tomcat
 
 - name: Start tomcat service
   systemd:

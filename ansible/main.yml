@@ -1,5 +1,5 @@
 ---
-- hosts: dbservers
+- hosts: tag_Name_solrserver
   pre_tasks:
     - name: Install Java
       yum: name="java-1.8.0-openjdk.x86_64" state=present
@@ -9,8 +9,13 @@
     - solr
   become: true
 
-- hosts: appservers
+- hosts: tag_Name_appserver
   roles:
     - appserver
     - geonetwork
+  become: true
+
+- hosts: tag_Name_webserver
+  roles:
+    - webserver
   become: true

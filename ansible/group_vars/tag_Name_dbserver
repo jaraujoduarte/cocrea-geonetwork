@@ -2,14 +2,14 @@
 
 # Users.
 mysql_users:
-  - name: admin
+  - name: defaultuser
     host: "%"
-    password: gnos
-    priv: "geonetwork.*:ALL,GRANT"
+    password: default1
+    priv: "geonetworkdb.*:ALL,GRANT"
 
 # Databases.
 mysql_databases:
-  - name: geonetwork
+  - name: geonetworkdb
     collation: utf8_general_ci
     encoding: utf8
     replicate: 1

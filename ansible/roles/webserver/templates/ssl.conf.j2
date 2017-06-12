@@ -1,0 +1,28 @@
+<IfModule mod_ssl.c>
+  <VirtualHost _default_:443>
+    ServerName www.mylocal.com
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    ErrorLog "/etc/httpd/logs/error.log"
+    LogLevel warn
+    CustomLog "/etc/httpd/logs/ssl_access.log" common
+
+    SSLProxyEngine On
+    ProxyPreserveHost On
+    ProxyRequests Off
+
+
+    ProxyPass / {{ apache["appserver_url"] }}/
+    ProxyPassReverse / {{ apache["appserver_url"] }}/
+
+
+    SSLEngine on
+    SSLCertificateKeyFile /etc/httpd/ssl/apache.key
+    SSLCertificateFile /etc/httpd/ssl/apache.crt
+
+  </VirtualHost>
+</IfModule>
