@@ -1,0 +1,66 @@
+---
+- name: Apache installation
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - httpd
+    - mod_ssl
+    - libsemanage-python
+
+- name: Setting SE Linux for apache to connect through network
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+
+- name: Activating apache modules
+  apache2_module:
+    state: present
+    name: "{{item}}"
+  with_items:
+    - ssl
+    - headers
+    - proxy
+    - proxy_ajp
+    - proxy_connect
+    - proxy_ftp
+    - proxy_http
+    - rewrite
+
+- name: Directory for ssl keys
+  file:
+    path: "/etc/httpd/ssl"
+    state: directory
+
+- name: Check if the ssl keys have already been created
+  stat:
+    path: "/etc/httpd/ssl/apache.crt"
+  register: ver_key
+
+- name: Listen to 443 for https
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: 'Listen 443'
+  notify:
+    - restart apache
+
+- name: Creation of keys for ssl
+  shell: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/httpd/ssl/apache.key -out /etc/httpd/ssl/apache.crt -subj "/C=CO/ST=Atlantico/L=Barranquilla/O=Dis/CN=www.cocrealab.com"
+  when: not ver_key.stat.exists
+
+- name: Copy certificate so Linux can pick it up
+  copy:
+    remote_src: true
+    src: /etc/httpd/ssl/apache.crt
+    dest: /etc/pki/ca-trust/source/anchors/
+
+- name: Executing update-ca-trust
+  command: update-ca-trust
+
+- name: Adding ssl configuration
+  template:
+    src: ssl.conf.j2
+    dest: /etc/httpd/conf.d/ssl.conf
+  notify:
+    - restart apache

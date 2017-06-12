@@ -1,8 +1,5 @@
 ---
-- hosts: appservers
+- hosts: tag_Name_appserver
   roles:
     - geonetwork
-<<<<<<< Updated upstream
-=======
   become: true
->>>>>>> Stashed changes

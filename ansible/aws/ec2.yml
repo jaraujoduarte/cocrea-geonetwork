@@ -1,0 +1,83 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Creación ec2 group para acceso ssh y otros defaults
+      ec2_group:
+        name: geonetwork-default
+        aws_access_key: "{{ m_access_key }}"
+        aws_secret_key: "{{ m_secret_key }}"
+        region: "{{ m_region }}"
+        description: Acceso ssh y otros defaults
+        vpc_id: "{{ m_vpc_id }}"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+
+    - name: Creación ec2 group para acceso al servidor web
+      ec2_group:
+        name: geonetwork-webserver
+        aws_access_key: "{{ m_access_key }}"
+        aws_secret_key: "{{ m_secret_key }}"
+        region: "{{ m_region }}"
+        description: Acceso https para servidor web
+        vpc_id: "{{ m_vpc_id }}"
+        rules:
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+
+    - name: Aprovisionamiento servidor de aplicaciones
+      ec2:
+         aws_access_key: "{{ m_access_key }}"
+         aws_secret_key: "{{ m_secret_key }}"
+         region: "{{ m_region }}"
+         key_name: "{{ m_keyname }}"
+         group: ['default', 'geonetwork-default']
+         instance_type: "{{ ec2_instance_type }}"
+         image: "{{ ec2_image }}"
+         wait: true
+         exact_count: 1
+         count_tag:
+            Name: geovm
+         instance_tags:
+            Name: appserver
+      register: ec2
+
+    - name: Aprovisionamiento servidor Solr
+      ec2:
+         aws_access_key: "{{ m_access_key }}"
+         aws_secret_key: "{{ m_secret_key }}"
+         region: "{{ m_region }}"
+         key_name: "{{ m_keyname }}"
+         group: ['default', 'geonetwork-default']
+         instance_type: "{{ ec2_instance_type }}"
+         image: "{{ ec2_image }}"
+         wait: true
+         exact_count: 1
+         count_tag:
+            Name: geovm
+         instance_tags:
+            Name: solrserver
+      register: ec2
+
+    - name: Aprovisionamiento servidor web
+      ec2:
+         aws_access_key: "{{ m_access_key }}"
+         aws_secret_key: "{{ m_secret_key }}"
+         region: "{{ m_region }}"
+         key_name: "{{ m_keyname }}"
+         group: ['default', 'geonetwork-default', 'geonetwork-webserver']
+         instance_type: "{{ ec2_instance_type }}"
+         image: "{{ ec2_image }}"
+         wait: true
+         exact_count: 1
+         count_tag:
+            Name: geovm
+         instance_tags:
+            Name: webserver
+      register: ec2

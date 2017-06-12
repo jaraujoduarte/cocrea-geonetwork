@@ -13,7 +13,7 @@ Environment="CATALINA_OPTS=-Xms{{ tomcat['java_vm_ms'] }} -Xmx{{ tomcat['java_vm
 Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
 
 ExecStart=/opt/tomcat/bin/startup.sh
-ExecStop=/bin/kill -15 $MAINPID
+ExecStop=/bin/kill -9 $MAINPID
 
 User=tomcat
 Group=tomcat

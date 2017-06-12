@@ -1,4 +1,5 @@
 ---
-- hosts: appservers
+- hosts: tag_Name_appserver
   roles:
     - appserver
+  become: true
