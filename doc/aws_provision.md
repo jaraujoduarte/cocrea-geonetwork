@@ -1,7 +1,7 @@
 # Aprovisionamiento en AWS
 El proyecto entrega una automatización de referencia de un conjunto de maquinas en AWS a ser usadas para desplegar los diferentes componentes de la instalación de Geonetwork.
 
-En esta versión del despliegue, se utiliza el servicio [EC2](https://aws.amazon.com/ec2/) (Elastic Compute Cloud) para la provisión de las maquinas virtuales donde van a correr nuestros servicios, y [RDS](https://aws.amazon.com/rds/) (Relational Database Service) a traves de la cual se instancia una base de datos relacional de Geonetwork.
+En esta versión del despliegue, se utiliza el servicio [EC2](https://aws.amazon.com/ec2/) (Elastic Compute Cloud) para la provisión de las maquinas virtuales donde van a correr nuestros servicios, y [RDS](https://aws.amazon.com/rds/) (Relational Database Service) a traves de la cual se instancia la base de datos relacional de Geonetwork.
 
 ## Requerimientos
 
