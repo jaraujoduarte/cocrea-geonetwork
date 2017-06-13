@@ -1,5 +1,7 @@
-m_access_key: "ACCESS_KEY"
-m_secret_key: "SECRET_KEY"
+# Export the variables to access the AWS API
+#export AWS_ACCESS_KEY_ID=XXXXXXXXXX
+#export AWS_SECRET_ACCESS_KEY=XXXXXXXXXX
+
 m_vpc_id: vpc-f6fc429f
 m_region: eu-west-2
 m_keyname: geonetwork-london

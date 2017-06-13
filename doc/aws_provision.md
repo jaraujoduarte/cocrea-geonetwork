@@ -35,13 +35,10 @@ chmod +x $REPO_ROOT/ansible/aws/inventory/ec2.py
 ansible_ssh_private_key_file: "/my/path/cocrea-geonetwork/ansible/aws/sshkey/geokey.pem"
 ```
 
-5. Agrega tus credenciales para hacer uso de la API de AWS
+5. Crea variables de ambiente para tu acceso a la API de AWS
 ```
-# $REPO_ROOT/ansible/aws/group_vars/all
-...
-access_key: "TU_ACCESS_KEY"
-secret_key: "TU_SECRET_KEY"
-...
+export AWS_ACCESS_KEY_ID=XXXXXXXXXX
+export AWS_SECRET_ACCESS_KEY=XXXXXXXXXX
 ```
 
 6. AWS crea una VPC por defecto a la cual son añadidas las maquinas virtuales instanciadas por EC2. Obten el id de esta VPC y modificalo en el archivo de variables.
