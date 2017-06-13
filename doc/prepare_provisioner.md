@@ -7,7 +7,7 @@ Para poder ejecutar el despliegue automatizado de geonetwork, se debe habilitar 
 
 A continuación se explican en mas detalles los requerimientos de la maquina:
 
-* Información actualizada acerca de las distribuciones de Linux soportadas puede ser encontrada [aquí] (http://docs.ansible.com/ansible/intro_installation.html#control-machine-requirements).
+* Información actualizada acerca de las distribuciones de Linux soportadas puede ser encontrada [aquí](http://docs.ansible.com/ansible/intro_installation.html#control-machine-requirements).
 * Paquetes y software:
   * Python 2.* (por lo general viene en la distribucion de Linux)
   * [Boto](https://github.com/boto/boto#installation)
