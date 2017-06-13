@@ -28,7 +28,14 @@ chmod +x $REPO_ROOT/ansible/aws/inventory/ec2.py
 
 3. Copia la parte privada de la llave ssh especificada en el directorio "$REPO_ROOT/sshkey/geokey.pem"
 
-4. Agrega tus credenciales para hacer uso de la API de AWS
+4. Especifica la ruta hacia la llave ssh privada
+```
+# $REPO_ROOT/ansible/group_vars/ec2
+...
+ansible_ssh_private_key_file: "/my/path/cocrea-geonetwork/ansible/aws/sshkey/geokey.pem"
+```
+
+5. Agrega tus credenciales para hacer uso de la API de AWS
 ```
 # $REPO_ROOT/ansible/aws/group_vars/all
 ...
@@ -37,7 +44,7 @@ secret_key: "TU_SECRET_KEY"
 ...
 ```
 
-5. AWS crea una VPC por defecto a la cual son añadidas las maquinas virtuales instanciadas por EC2. Obten el id de esta VPC y modificalo en el archivo de variables.
+6. AWS crea una VPC por defecto a la cual son añadidas las maquinas virtuales instanciadas por EC2. Obten el id de esta VPC y modificalo en el archivo de variables.
 ```
 # $REPO_ROOT/ansible/aws/group_vars/all
 ...
@@ -45,7 +52,7 @@ m_vpc_id: vpc-elidcorrecto
 ...
 ```
 
-6. Aunque con los cambios hechos hasta ahora podrias ejecutar un despliegue, la especificaciónes de las maquinas virtuales no corresponden a un ambiente de producción. Puedes cambiar las espcificaciónes y la imagen (AMI) de la maquina virtual siempre y cuando correspondan a un sistema __CentOS 7__ o __RedHat Enterprise Linux 7__. Tambien pueden ser modificadas las espcificaciones de las base de datos siempre y cuando correspondan a una base de datos MySQL.
+7. Aunque con los cambios hechos hasta ahora podrias ejecutar un despliegue, la especificaciónes de las maquinas virtuales no corresponden a un ambiente de producción. Puedes cambiar las espcificaciónes y la imagen (AMI) de la maquina virtual siempre y cuando correspondan a un sistema __CentOS 7__ o __RedHat Enterprise Linux 7__. Tambien pueden ser modificadas las espcificaciones de las base de datos siempre y cuando correspondan a una base de datos MySQL.
 ```
 # $REPO_ROOT/ansible/aws/group_vars/all
 ...
@@ -59,22 +66,22 @@ db_username: defaultuser
 db_password: default1
 ...
 ```
-7. Ejecuta la creación de la instancia de la base de datos
+
+8. Ejecuta la creación de la instancia de la base de datos
 ```
 cd $REPO_ROOT/ansible/aws/
 ansible-playbook -v rds.yml
 ```
 
-8. Ejecuta la creación de las maquinas virtuales
+9. Ejecuta la creación de las maquinas virtuales
 ```
 cd $REPO_ROOT/ansible/aws/
 ansible-playbook -v ec2.yml
 ```
 
-9. Modifica las variables usadas como parametros de entrada para los playbooks de Ansible. Información detallada acerca de los valores [aquí]()
+10. Modifica las variables usadas como parametros de entrada para los playbooks de Ansible. Información detallada acerca de los valores [aquí]()
 
-
-10. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Solr haciendo uso del inventario dinamico de Ansible para AWS
+11. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Solr haciendo uso del inventario dinamico de Ansible para AWS
 ```
 cd $REPO_ROOT/ansible/
 ansible-playbook -i ../aws/invetory/ec2.py -v solr.yml
