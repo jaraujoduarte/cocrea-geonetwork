@@ -4,25 +4,24 @@ tomcat:
   remote: yes
   version: apache-tomcat-7.0.78
   home: /opt/tomcat
-  java_vm_ms: 752M
+  java_vm_ms: 1024M
   java_vm_mx: 1024M
   # If remote is 'no' then location will be the location on the Ansible controller machine
   # of the file to be copied to the appserver
-  package_location: http://apache.uniminuto.edu/tomcat/tomcat-7/v7.0.78/bin/apache-tomcat-7.0.78.tar.gz
+  package_location: "{{ tomcat_pkg_url }}"
   #package_location: /vagrant_share/tmp/apache-tomcat-7.0.77.tar.gz
   admin_username: admin
   admin_password: admin
-
 
 geonetwork:
   redeploy: no
   # 'no' means that the installation package will be copied from the Ansible controller machine
   # 'yes' means that the .war is already on the appsever or that the download wil be executed from the appserver
-  remote: no
+  remote: yes
   # If remote is 'no' then location will be the location on the Ansible controller machine
   # of the file to be copied to the appserver
-  #package_location: http://downloads.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v3.2.1/geonetwork.war
-  package_location: /vagrant_share/tmp/geonetwork.war
+  package_location: "{{ geonetwork_pkg_url }}"
+  #package_location: /tmp/geonetwork.war
   home: /geohome
   data_dir: "geohome/data"
   tomcat_dir: "{{ tomcat['home'] }}/webapps/geonetwork"
@@ -32,10 +31,7 @@ geonetwork:
     name: mysql
     username: defaultuser
     password: default1
-    # If using vagrant/virtualbox
-    #host: 10.0.0.22
-    # If using any other provider i.e. AWS
-    host: default-instance.ceivenqlienb.eu-west-2.rds.amazonaws.com
+    host: "{{ (deployment_type == "local") | ternary('10.0.0.22', db_endpoint) }}"
     # current version of geonetwork ignores this - port hard coded
     port: 3306
     database: geonetworkdb
@@ -47,8 +43,5 @@ geonetwork:
     # database: /geohome/geonetworkdb
   solr:
     # Should match the information on group_vars/solrservers
-    # If using vagrant/virtualbox
-    #url: 10.0.0.22:8983
-    # If using any other provider i.e. AWS
-    url: "http://{{ hostvars[groups['tag_Name_solrserver'][0]]['ec2_private_dns_name'] }}:8983"
+    url: "{{ 'http://10.0.0.22:8983' if deployment_type == "local" else 'http://' + hostvars[groups['tag_Name_solrserver'][0]]['ec2_private_dns_name'] + ':8983'"
     collection: collection1

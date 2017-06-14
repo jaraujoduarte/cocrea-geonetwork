@@ -1,0 +1,7 @@
+input:
+  deployment_type: local
+  #deployment_type: aws
+  # If deployment_type == aws
+  #db_endpoint: default-instance.ceivenqlienb.eu-west-2.rds.amazonaws.com
+  tomcat_pkg_url: "http://apache.uniminuto.edu/tomcat/tomcat-7/v7.0.78/bin/apache-tomcat-7.0.78.tar.gz"
+  geonetwork_pkg_url: "http://downloads.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v3.2.1/geonetwork.war"
