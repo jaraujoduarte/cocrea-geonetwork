@@ -1,16 +1,32 @@
 ---
 - hosts: localhost
   connection: local
-  gather_facts: false
+  gather_facts: true
+  vars:
+    m_keyname: geonetwork
   tasks:
+    - name: Refreshing EC2 inventory cache
+      shell: "python inventory/ec2.py --list --refresh-cache"
+
+    - name: Geonetwork ec2 key
+      ec2_key:
+        region: "{{ m_region }}"
+        name: "{{ m_keyname }}"
+      register: geokey
+
+    - name: Create folder for ec2 ssh key
+      file:
+        path: "./sshkey"
+        state: directory
+
+    - copy: content="{{ geokey.key.private_key }}" dest=sshkey/geonetwork.pem
+      when: geokey.key.private_key is defined
+
     - name: Creación ec2 group para acceso ssh y otros defaults
       ec2_group:
         name: geonetwork-default
-        aws_access_key: "{{ m_access_key }}"
-        aws_secret_key: "{{ m_secret_key }}"
         region: "{{ m_region }}"
         description: Acceso ssh y otros defaults
-        vpc_id: "{{ m_vpc_id }}"
         rules:
           - proto: tcp
             from_port: 22
@@ -20,11 +36,8 @@
     - name: Creación ec2 group para acceso al servidor web
       ec2_group:
         name: geonetwork-webserver
-        aws_access_key: "{{ m_access_key }}"
-        aws_secret_key: "{{ m_secret_key }}"
         region: "{{ m_region }}"
         description: Acceso https para servidor web
-        vpc_id: "{{ m_vpc_id }}"
         rules:
           - proto: tcp
             from_port: 443
@@ -33,8 +46,8 @@
 
     - name: Aprovisionamiento servidor de aplicaciones
       ec2:
-         aws_access_key: "{{ m_access_key }}"
-         aws_secret_key: "{{ m_secret_key }}"
+         # Can be uncommented for idempotency but it works only after 24h of the last run
+         #id: appserver1
          region: "{{ m_region }}"
          key_name: "{{ m_keyname }}"
          group: ['default', 'geonetwork-default']
@@ -47,11 +60,11 @@
          instance_tags:
             Name: appserver
       register: ec2
+      when: groups['tag_Name_webserver'] is undefined
 
     - name: Aprovisionamiento servidor Solr
       ec2:
-         aws_access_key: "{{ m_access_key }}"
-         aws_secret_key: "{{ m_secret_key }}"
+         #id: solrserver1
          region: "{{ m_region }}"
          key_name: "{{ m_keyname }}"
          group: ['default', 'geonetwork-default']
@@ -64,11 +77,11 @@
          instance_tags:
             Name: solrserver
       register: ec2
+      when: groups['tag_Name_webserver'] is undefined
 
     - name: Aprovisionamiento servidor web
       ec2:
-         aws_access_key: "{{ m_access_key }}"
-         aws_secret_key: "{{ m_secret_key }}"
+         #id: webserver1
          region: "{{ m_region }}"
          key_name: "{{ m_keyname }}"
          group: ['default', 'geonetwork-default', 'geonetwork-webserver']
@@ -81,3 +94,4 @@
          instance_tags:
             Name: webserver
       register: ec2
+      when: groups['tag_Name_webserver'] is undefined
