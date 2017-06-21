@@ -1,5 +1,43 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require 'getoptlong'
+require 'yaml'
+
+opts = GetoptLong.new(
+  [ '--aws', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--appserver', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--solrserver', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--webserver', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--dbserver', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--geonetwork', GetoptLong::OPTIONAL_ARGUMENT ]
+)
+
+provision_aws=false
+provision_appserver=false
+provision_solrserver=false
+provision_webserver=false
+provision_geonetwork=false
+provision_dbserver=false
+provision_infra=false
+
+opts.each do |opt, arg|
+  case opt
+  when '--aws'
+      provision_aws=true
+  when '--appserver'
+      provision_appserver=true
+  when '--solrserver'
+      provision_solrserver=true
+  when '--webserver'
+      provision_webserver=true
+    when '--dbserver'
+        provision_dbserver=true
+  when '--geonetwork'
+      provision_geonetwork=true
+  when '--infra'
+      provision_infra=true
+  end
+end
 
 $copy_node_ssh_keys = <<-SCRIPT
 if [ ! -d "/keys" ]; then
@@ -17,59 +55,150 @@ sudo chown -R vagrant:vagrant /keys
 sudo chmod 600 /keys/*
 SCRIPT
 
-Vagrant.configure("2") do |config|
-  config.vm.box = "centos/7"
-  config.vm.box_check_update = false
-  #config.vbguest.auto_update = false
-  config.vm.synced_folder "../", "/vagrant", type: "virtualbox", disabled: true
-	config.vm.provider :virtualbox do |vb|
-		vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-		vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+if !provision_aws then
+	puts "Running automation for local environment"
+
+	Vagrant.configure("2") do |config|
+	  config.vm.box = "centos/7"
+	  config.vm.box_check_update = false
+	  #config.vbguest.auto_update = false
+	  config.vm.synced_folder "../", "/vagrant", type: "virtualbox", disabled: true
+		config.vm.provider :virtualbox do |vb|
+			vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+			vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+		end
+
+	  config.vm.define "appserver" do |appserver|
+			appserver.vm.provider :virtualbox do |vb|
+				vb.memory = 1024
+		    vb.cpus = 2
+			end
+	    appserver.vm.network "private_network", ip: "10.0.0.21"
+	  end
+
+		config.vm.define "solrserver" do |solrserver|
+			solrserver.vm.provider :virtualbox do |vb|
+				vb.memory = 1024
+		    vb.cpus = 1
+			end
+	    solrserver.vm.network "private_network", ip: "10.0.0.22"
+	  end
+
+		config.vm.define "webserver" do |webserver|
+			webserver.vm.provider :virtualbox do |vb|
+				vb.memory = 1024
+		    vb.cpus = 1
+			end
+	    webserver.vm.network "private_network", ip: "10.0.0.23"
+	  end
+
+	  # Using ubuntu for provisioning as folder sharing is easier due to the lack of
+	  # guest additions on the regular centos/7 box
+	  config.vm.define "provisioner" do |provisioner|
+	    provisioner.vm.box = "ubuntu/trusty64"
+	    provisioner.vm.synced_folder "../", "/vagrant_share", type: "virtualbox"
+		  provisioner.vm.hostname = "provisioner"
+			provisioner.vm.network "private_network", ip: "10.0.0.11"
+
+			provisioner.vm.provision "shell", inline: $copy_node_ssh_keys
+			provisioner.vm.provision "shell", path: "../scripts/prepare-provisioner-ubuntu.sh"
+			provisioner.vm.provision "shell", inline: "sudo ansible-galaxy install -r /vagrant_share/ansible/requirements.yml"
+
+			provisioner.vm.provision "ansible_local" do |ansible|
+			  ansible.verbose = "-v"
+			  ansible.limit = "all"
+			  ansible.provisioning_path = "/vagrant_share/ansible"
+			  ansible.inventory_path = "../vagrant/ansible_config/inventory"
+			  ansible.config_file = "../vagrant/ansible_config/ansible.cfg"
+
+        if provision_appserver then
+          ansible.playbook = "appserver.yml"
+        elsif provision_solrserver then
+          ansible.playbook = "solr.yml"
+        elsif provision_webserver then
+          ansible.playbook = "webserver.yml"
+        elsif provision_dbserver then
+          ansible.playbook = "db.yml"
+        elsif provision_geonetwork then
+          ansible.playbook = "app.yml"
+        else
+          ansible.playbook = "allin_local.yml"
+        end
+
+			end
+		end
 	end
 
-  config.vm.define "appserver" do |appserver|
-		appserver.vm.provider :virtualbox do |vb|
-			vb.memory = 1024
-	    vb.cpus = 2
+else # aws conditional
+
+	Vagrant.configure("2") do |config|
+		puts "Running automation for AWS"
+
+	  config.vm.box_check_update = false
+		config.vm.provider :virtualbox do |vb|
+			vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+			vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
 		end
-    appserver.vm.network "private_network", ip: "10.0.0.21"
-  end
 
-	config.vm.define "solrserver" do |solrserver|
-		solrserver.vm.provider :virtualbox do |vb|
-			vb.memory = 1024
-	    vb.cpus = 1
-		end
-    solrserver.vm.network "private_network", ip: "10.0.0.22"
-  end
+	  # Using ubuntu for provisioning as folder sharing is easier due to the lack of
+	  # guest additions on the regular centos/7 box
+	  config.vm.define "provisioner-aws" do |provisioner|
+	    provisioner.vm.box = "ubuntu/trusty64"
+	    provisioner.vm.synced_folder "../", "/vagrant_share", type: "virtualbox"
+		  provisioner.vm.hostname = "provisioner-aws"
 
-	config.vm.define "webserver" do |webserver|
-		webserver.vm.provider :virtualbox do |vb|
-			vb.memory = 1024
-	    vb.cpus = 1
-		end
-    webserver.vm.network "private_network", ip: "10.0.0.23"
-  end
+      input_values = YAML.load_file("../input.yml")
 
-  # Using ubuntu for provisioning as folder sharing is easier due to the lack of
-  # guest additions on the regular centos/7 box
-  config.vm.define "provisioner" do |provisioner|
-    provisioner.vm.box = "ubuntu/trusty64"
-    provisioner.vm.synced_folder "../", "/vagrant_share", type: "virtualbox"
-	  provisioner.vm.hostname = "provisioner"
-		provisioner.vm.network "private_network", ip: "10.0.0.11"
+      $create_aws_env_file = <<-SCRIPT
+      if [ -f "/home/vagrant/.bash_profile" ]; then
+      	rm /home/vagrant/.bash_profile
+      fi
 
-		provisioner.vm.provision "shell", inline: $copy_node_ssh_keys
-		provisioner.vm.provision "shell", path: "../scripts/prepare-provisioner-ubuntu.sh"
-		provisioner.vm.provision "shell", inline: "sudo ansible-galaxy install -r /vagrant_share/ansible/requirements.yml"
+      touch /home/vagrant/.bash_profile
+      echo "export AWS_ACCESS_KEY_ID=#{input_values['i_aws_access_key_id']}" >> /home/vagrant/.bash_profile
+      echo "export AWS_SECRET_ACCESS_KEY=#{input_values['i_aws_secret_access_key']}" >> /home/vagrant/.bash_profile
+      SCRIPT
 
-		provisioner.vm.provision "ansible_local" do |ansible|
-		  ansible.verbose = "-v"
-		  ansible.limit = "all"
-		  ansible.provisioning_path = "/vagrant_share"
-		  ansible.playbook = "ansible/main.yml"
-		  ansible.inventory_path = "vagrant/ansible_config/inventory"
-		  ansible.config_file = "vagrant/ansible_config/ansible.cfg"
-		end
-	end
-end
+      provisioner.vm.provision "shell", inline: $create_aws_env_file
+			provisioner.vm.provision "shell", path: "../scripts/prepare-provisioner-ubuntu.sh"
+			provisioner.vm.provision "shell", inline: "sudo ansible-galaxy install -r /vagrant_share/ansible/requirements.yml"
+      provisioner.vm.provision "shell", inline: "sudo chmod +x /vagrant_share/ansible/aws/inventory/ec2.py"
+
+	    provisioner.vm.provision "ansible_local" do |ansible|
+			  ansible.verbose = "-v"
+        if provision_aws then
+          ansible.limit = ""
+        else
+          ansible.limit = "all"
+        end
+			  ansible.provisioning_path = "/vagrant_share/ansible"
+
+        ansible.inventory_path = "aws/inventory/ec2.py"
+        ansible.config_file = "../vagrant/ansible_config/ansible.cfg"
+
+        ansible.extra_vars = {
+          i_deployment_type: "aws",
+          i_tomcat_pkg_url: input_values["i_tomcat_pkg_url"],
+          i_geonetwork_pkg_url: input_values["i_geonetwork_pkg_url"],
+          i_db_endpoint: input_values["i_db_endpoint"]
+        }
+
+        if provision_appserver then
+          ansible.playbook = "appserver.yml"
+        elsif provision_solrserver then
+          ansible.playbook = "solr.yml"
+        elsif provision_webserver then
+          ansible.playbook = "webserver.yml"
+        elsif provision_geonetwork then
+          ansible.playbook = "app.yml"
+        elsif provision_infra then
+          ansible.playbook = "aws/main.yml"
+        else
+          ansible.playbook = "allin_aws.yml"
+        end
+
+			end # end provisioning
+		end # end vm config
+	end # end main config
+
+end # end aws conditional

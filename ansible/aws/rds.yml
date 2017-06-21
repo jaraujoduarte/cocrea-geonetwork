@@ -5,8 +5,6 @@
   tasks:
     - name: "Creación del grupo de parametros para MySQL"
       rds_param_group:
-        aws_access_key: "{{ m_access_key }}"
-        aws_secret_key: "{{ m_secret_key }}"
         region: "{{ m_region }}"
         state: present
         name: geonetwork-custom
@@ -18,8 +16,6 @@
     - name: Aprovisionamiento de la base de datos
       rds:
         #wait: true
-        aws_access_key: "{{ m_access_key }}"
-        aws_secret_key: "{{ m_secret_key }}"
         command: create
         instance_name: "{{ db_instance_name }}"
         region: "{{ m_region }}"
@@ -31,5 +27,4 @@
         username: "{{ db_username }}"
         password: "{{ db_password }}"
         tags:
-          Environment: testing
           Application: geonetwork
