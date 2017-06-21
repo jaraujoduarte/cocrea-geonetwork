@@ -33,9 +33,9 @@ geonetwork:
     username: defaultuser
     password: default1
     # If using vagrant/virtualbox
-    host: 10.0.0.22
+    #host: 10.0.0.22
     # If using any other provider i.e. AWS
-    #host: default-instance.ceivenqlienb.eu-west-2.rds.amazonaws.com
+    host: default-instance.ceivenqlienb.eu-west-2.rds.amazonaws.com
     # current version of geonetwork ignores this - port hard coded
     port: 3306
     database: geonetworkdb
@@ -48,7 +48,7 @@ geonetwork:
   solr:
     # Should match the information on group_vars/solrservers
     # If using vagrant/virtualbox
-    url: 10.0.0.22:8983
+    #url: 10.0.0.22:8983
     # If using any other provider i.e. AWS
-    #url: ip-172-31-1-81.eu-west-2.compute.internal:8983
+    url: "http://{{ hostvars[groups['tag_Name_solrserver'][0]]['ec2_private_dns_name'] }}:8983"
     collection: collection1

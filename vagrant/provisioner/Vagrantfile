@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+  config.vm.box_check_update = false
+  #config.vbguest.auto_update = false
+  config.vm.synced_folder "../", "/vagrant", type: "virtualbox", disabled: true
+	config.vm.provider :virtualbox do |vb|
+		vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+		vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+	end
+
+  # Using ubuntu for provisioning as folder sharing is easier due to the lack of
+  # guest additions on the regular centos/7 box
+  config.vm.define "provisioner" do |provisioner|
+    provisioner.vm.box = "ubuntu/trusty64"
+    provisioner.vm.synced_folder "../../", "/vagrant_share", type: "virtualbox"
+	  provisioner.vm.hostname = "provisioner"
+
+		provisioner.vm.provision "shell", path: "../../scripts/prepare-provisioner-ubuntu.sh"
+		provisioner.vm.provision "shell", inline: "sudo ansible-galaxy install -r /vagrant_share/ansible/requirements.yml"
+	end
+end
