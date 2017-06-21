@@ -1,4 +1,4 @@
 # Como consultar las instancias EC2 de AW
 Para consultar las instancias creadas y el estado en que se encuentra 
 ingresamos al AWS Management Console, nos ubicamos en el servicio “compute” y seleccionamos EC2.
-
+<div style="text-align:center"><img src ="doc/img/1.png" /></div>
