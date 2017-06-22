@@ -5,10 +5,10 @@
   vars:
     m_keyname: geonetwork
   tasks:
-    - name: Refreshing EC2 inventory cache
+    - name: Refreshing ec2 inventory cache
       shell: "python inventory/ec2.py --list --refresh-cache"
 
-    - name: Geonetwork ec2 key
+    - name: Checking ec2 key pair
       ec2_key:
         region: "{{ m_region }}"
         name: "{{ m_keyname }}"
@@ -21,6 +21,11 @@
 
     - copy: content="{{ geokey.key.private_key }}" dest=sshkey/geonetwork.pem
       when: geokey.key.private_key is defined
+
+    - name: Making sure ssh key has right permissions
+      file:
+        path: "./sshkey/geonetwork.pem"
+        mode: '600'
 
     - name: Creación ec2 group para acceso ssh y otros defaults
       ec2_group:
