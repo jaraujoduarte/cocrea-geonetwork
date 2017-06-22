@@ -147,7 +147,7 @@ else # aws conditional
 	    provisioner.vm.synced_folder "../", "/vagrant_share", type: "virtualbox"
 		  provisioner.vm.hostname = "provisioner-aws"
 
-      input_values = YAML.load_file("../input.yml")
+      input_values = YAML.load_file("input.yml")
 
       $create_aws_env_file = <<-SCRIPT
       if [ -f "/home/vagrant/.bash_profile" ]; then
