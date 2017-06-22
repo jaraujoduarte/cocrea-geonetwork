@@ -35,8 +35,12 @@ Las tecnologías utilizadas varian en su naturaleza y aplicación (servidor de a
 ## Como empezar?
 Dependiendo de las necesidades se puede hacer uso de una de las versiones del despliegue que han sido implementadas (AWS o Vagrant/Virtualbox). Se debe tener en cuenta que aunque en ambos casos el despliegue lucira como esta detallado arriba (con los diferentes componentes corriendo e interactuando entre sí) la version AWS ha sido implementada para lograr un ambiente de producción y la version basada en Vagrant para realizar pruebas del software o desarrollo.
 
-Para ejecutar cualquiera de las dos versiones implementadas, sigue los siguientes pasos:
+### Local (Vagrant/Virtualbox)
+Para ejecutar el despliegue local siga las instrucciones [aquí](doc/vagrant_provision.md)
 
-1. Sigue las instrucciones mencionadas [aquí](doc/prepare_provisioner.md) para prepara la maquina desde donde se van a ejecutar los scripts - esta maquina sera llamada "Control Machine" a traves de la documentación.
+### AWS
+Para la opción de despliegue en AWS, en esta documentación se presentan dos opciones: __"manual"__ o __"simple"__. La opción __"manual"__ esta orientada a usuarios con una experticia mayor en las tecnologías utilizadas y por lo general con deseos de realizar cambios no triviales a la configuración (via codigo). Por otro lado la opción __"simple"__ despliega la infraestructura con los valores sugeridos por defecto.
 
-2. Escoge la versión de aprovisionamiento que quieres ejecutar. Para AWS sigue las instrucciones [aquí](doc/aws_provision.md) y para Vagrant sigue las de [aquí](doc/vagrant_provision.md).
+Si desea ejecutar la despliegue de manera __"manual"__ siga las instrucciones [aquí](doc/aws_provision_manual.md).
+
+Si desea ejecutar la despliegue de manera __"simple"__ siga las instrucciones [aquí](doc/aws_provision_simple.md).

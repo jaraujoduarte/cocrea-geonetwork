@@ -6,8 +6,9 @@ El proyecto entrega una automatización de referencia de un conjunto de maquinas
 * Virtualbox 5.1.22+
 * Vagrant 1.9.5+
 * Git 2.13.1+ (Si se ejecuta desde Windows - Git Bash)
-* Al menos 4GB de RAM
+* Al menos 8GB de RAM
 * Al menos 2GB de almacenamiento disponible
+* Conexión a internet
 
 ## Procedimiento
 
@@ -15,6 +16,15 @@ El proyecto entrega una automatización de referencia de un conjunto de maquinas
 ```
 git clone https://github.com/jaraujoduarte/cocrea-geonetwork.git
 ```
+
+2. Ejecute el despliegue de la infraestructura
+```
+# $REPO_ROOT
+cd vagrant
+vagrant up
 ```
 
-## Solución de problemas
+3. Acceda a Geonetwork a traves de la URL https://10.0.0.23/geonetwork
+
+## Modificaciones
+Para modificaciones mas alla de las que se pueden proveer por medio de input.yml, consulte [aquí](modifications.md)

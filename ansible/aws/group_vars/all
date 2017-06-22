@@ -4,7 +4,7 @@
 
 m_region: eu-west-2
 
-ec2_instance_type: t2.micro
+ec2_instance_type: t2.small
 ec2_image: ami-9c363cf8
 
 db_instance_type: db.t2.micro

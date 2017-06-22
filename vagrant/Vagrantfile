@@ -9,6 +9,8 @@ opts = GetoptLong.new(
   [ '--solrserver', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--webserver', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--dbserver', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--infra', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--db', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--geonetwork', GetoptLong::OPTIONAL_ARGUMENT ]
 )
 
@@ -18,6 +20,7 @@ provision_solrserver=false
 provision_webserver=false
 provision_geonetwork=false
 provision_dbserver=false
+provision_db=false
 provision_infra=false
 
 opts.each do |opt, arg|
@@ -30,12 +33,14 @@ opts.each do |opt, arg|
       provision_solrserver=true
   when '--webserver'
       provision_webserver=true
-    when '--dbserver'
-        provision_dbserver=true
+  when '--dbserver'
+      provision_dbserver=true
   when '--geonetwork'
       provision_geonetwork=true
   when '--infra'
       provision_infra=true
+  when '--db'
+      provision_db=true
   end
 end
 
@@ -192,7 +197,9 @@ else # aws conditional
         elsif provision_geonetwork then
           ansible.playbook = "app.yml"
         elsif provision_infra then
-          ansible.playbook = "aws/main.yml"
+          ansible.playbook = "aws/ec2.yml"
+        elsif provision_db then
+          ansible.playbook = "aws/rds.yml"
         else
           ansible.playbook = "allin_aws.yml"
         end

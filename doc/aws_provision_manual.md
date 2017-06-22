@@ -1,15 +1,32 @@
-# Aprovisionamiento en AWS
+# Aprovisionamiento en AWS (Manual)
 El proyecto entrega una automatización de referencia de un conjunto de maquinas en AWS a ser usadas para desplegar los diferentes componentes de la instalación de Geonetwork.
 
 En esta versión del despliegue, se utiliza el servicio [EC2](https://aws.amazon.com/ec2/) (Elastic Compute Cloud) para la provisión de las maquinas virtuales donde van a correr nuestros servicios, y [RDS](https://aws.amazon.com/rds/) (Relational Database Service) a traves de la cual se instancia la base de datos relacional de Geonetwork.
 
 ## Requerimientos
 
-* Una "[Control Machine](prepare_provisioner.md)" desde donde correr los playbooks de Ansible.
+* Una "Control Machine" desde donde ejecutar los playbooks de Ansible.
 
 * "Access Key" y "Secret Key" de AWS con los suficientes permisos para utilizar las APIs de los services EC2 y RDS. Instrucciones detalladas pueden ser encontradas [aquí](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey).
 
 * Un par de llaves (privada y publica) SSH que esten registradas en la zona de disponibilidad en las cual se vayan a desplegar las maquinas virtuales (por ejemplo: London/eu-west-2). Instrucciones para la creación de estas llaves pueden ser encontradas [aquí](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html).
+
+
+## Preparar "Control Machine"
+
+Para poder ejecutar el despliegue automatizado de geonetwork, se debe habilitar una maquina con Ansible (software de "automated configuration management"). Esta maquina la llamaremos "Control Machine" y debe tener instalada una distribución de Linux soportada por Ansible, ademas de poder conectarse a traves de SSH a las maquinas destino de nuestro despliegue.
+
+
+A continuación se explican en mas detalles los requerimientos de la maquina:
+
+* Información actualizada acerca de las distribuciones de Linux soportadas puede ser encontrada [aquí](http://docs.ansible.com/ansible/intro_installation.html#control-machine-requirements).
+* Paquetes y software:
+  * Python 2.* (por lo general viene en la distribucion de Linux)
+  * [Boto](https://github.com/boto/boto#installation)
+  * [Ansible 2.2+](http://docs.ansible.com/ansible/intro_installation.html)
+* Verificar que la "Control Machine" tiene acceso a las maquinas destino a traves de SSH.
+
+Este repositorio provee scripts para la instalación de los paquetes mencionados arriba y otras dependencias que pueden llegar a ser requeridas. Se proveen scripts para [Ubuntu](../scripts/prepare-provisioner-ubuntu.sh) y para [RedHat Enterprise Linux](../scripts/prepare-provisioner-rhel.sh)
 
 
 ## Procedimiento
@@ -76,7 +93,7 @@ cd $REPO_ROOT/ansible/aws/
 ansible-playbook -v ec2.yml
 ```
 
-10. Modifica las variables usadas como parametros de entrada para los playbooks de Ansible. Información detallada acerca de los valores [aquí]()
+10. Modifica las variables usadas como parametros de entrada para los playbooks de Ansible [aquí](modifications.md)
 
 11. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Solr haciendo uso del inventario dinamico de Ansible para AWS
 ```
@@ -94,6 +111,8 @@ Los scripts que despliegan la infrastructura en AWS crean los siguientes "[Secur
 * __geonetwork-default__ - acceso SSH desde fuera de la VPC
 * __geonetwork-webserver__ - acceso HTTP/443 desde fuera de la VPC (utilizado para acceder al Servidor Web)
 
+## Modificaciones
+Para modificaciones mas alla de las que se pueden proveer por medio de input.yml, consulte [aquí](modifications.md)
 
 ## Solución de problemas
 A continuación hay una lista de los posibles problemas junto con soluciones, que podras encontrar al ejecutar el aprovisionamiento.

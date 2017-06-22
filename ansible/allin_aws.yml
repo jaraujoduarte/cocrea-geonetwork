@@ -7,7 +7,7 @@
       include_vars:
         file: aws/group_vars/all
 
-- include: "aws/main.yml"
+- include: "aws/ec2.yml"
 
 # wait for ec2 instances to be available
 - hosts: localhost
