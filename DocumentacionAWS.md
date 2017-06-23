@@ -52,7 +52,7 @@ La clase se genera en un archivo pem
 Para asignar la clave a nuestra instancia vamos  a la opción connect
 <div style="text-align:center"><img src ="doc/img/6.3.png" /></div>
 
-Get seleccionamos Get password
+seleccionamos Get password
 <div style="text-align:center"><img src ="doc/img/6.4.png" /></div>
 
 Y buscamos el archivo en la carpeta donde la tenemos guardada en nuestro equipo local y lo adjuntamos a nuestra instancia.
