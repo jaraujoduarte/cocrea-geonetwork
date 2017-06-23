@@ -4,7 +4,7 @@ ingresamos al AWS Management Console, nos ubicamos en el servicio “compute” 
 <div style="text-align:center"><img src ="doc/img/1.png" /></div>
 
 Después de ingresar a EC2 seleccionamos “instances” y nos muestra las instancias creadas y su estado.
-<div style="text-align:center"><img src ="doc/img/1.2.png" /></div>
+<div style="text-align:center"><img src ="doc/img/1.1.png" /></div>
 
 # Como consultar las instancias RDS de AWS
 Para consultar las instancias RDS creadas y el estado en que se encuentra ingresamos al AWS Management Console, 
