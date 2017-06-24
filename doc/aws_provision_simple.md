@@ -21,12 +21,12 @@ Antes de empezar lea con atención la siguiente información:
 ## Procedimiento
 
 1. Descarga el repositorio
-```
+```shell
 git clone https://github.com/jaraujoduarte/cocrea-geonetwork.git
 ```
 
 2. Provee las credenciales para la API de AWS
-```
+```yaml
 # $REPO_ROOT/vagrant/input.yml
 ...
 i_aws_secret_access_key: "TU_SECRET_ACCESS_KEY"
@@ -37,14 +37,14 @@ i_aws_access_key_id: "TU_ACCESS_KEY_ID"
 3. Ejecute el despliegue de la instancia de la base de datos. Vagrant instancia una maquina virtual desde donde correr los playbooks de Ansible. Por este motivo puede que se muestren dialogos de confirmación cuando Virtualbox este creando la maquina.
 
   Si es la primera vez que se ejecuta (no existe la maquina virtual):
-```
+```shell
 # $REPO_ROOT
 cd vagrant
 vagrant --aws --db up
 ```
 
   Si no es la primera vez que se ejecuta (existe la maquina virtual) debido a un error previo u otro motivo:
-```
+```shell
 # $REPO_ROOT
 cd vagrant
 vagrant --aws --db provision
@@ -52,7 +52,7 @@ vagrant --aws --db provision
 La instancia puede demorar alrededor de 5 minutos para estar disponible.
 
 4. Verifique el endpoint de la instancia de la base de datos en la consola de AWS. Una vez hecho esto, modifica el parametro de entrada en archivo input.yml (sin el puerto! - vea la seccion de modificaciones en caso de que sea necesario cambiar el puerto por defecto):
-```
+```yaml
 # $REPO_ROOT/vagrant/input.yml
 ...
 i_db_endpoint: "tu-enpointr.rds.amazonaws.com"
@@ -60,7 +60,7 @@ i_db_endpoint: "tu-enpointr.rds.amazonaws.com"
 ```
 
 5. Ejecute el despliegue del resto de la infraestructura
-```
+```shell
 # $REPO_ROOT
 cd vagrant
 vagrant --aws provision

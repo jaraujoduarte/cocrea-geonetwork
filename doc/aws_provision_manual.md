@@ -34,32 +34,33 @@ Este repositorio provee scripts para la instalación de los paquetes mencionados
 Sigue los siguientes pasos desde la "Control Machine":
 
 1. Descarga el repositorio
-```
+```shell
 git clone https://github.com/jaraujoduarte/cocrea-geonetwork.git
 ```
 
 2. Modifica el script de inventario para que sea ejecutable
-```
+```shell
 chmod +x $REPO_ROOT/ansible/aws/inventory/ec2.py
 ```
 
 3. Copia la parte privada de la llave ssh especificada en el directorio "$REPO_ROOT/sshkey/geokey.pem"
 
 4. Especifica la ruta hacia la llave ssh privada
-```
+```yaml
 # $REPO_ROOT/ansible/group_vars/ec2
 ...
 ansible_ssh_private_key_file: "/my/path/cocrea-geonetwork/ansible/aws/sshkey/geokey.pem"
+...
 ```
 
 5. Crea variables de ambiente para tu acceso a la API de AWS
-```
+```shell
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=XXXXXXXXXX
 ```
 
 6. AWS crea una VPC por defecto a la cual son añadidas las maquinas virtuales instanciadas por EC2. Obten el id de esta VPC y modificalo en el archivo de variables.
-```
+```yaml
 # $REPO_ROOT/ansible/aws/group_vars/all
 ...
 m_vpc_id: vpc-elidcorrecto
@@ -67,7 +68,7 @@ m_vpc_id: vpc-elidcorrecto
 ```
 
 7. Aunque con los cambios hechos hasta ahora podrias ejecutar un despliegue, la especificaciónes de las maquinas virtuales no corresponden a un ambiente de producción. Puedes cambiar las espcificaciónes y la imagen (AMI) de la maquina virtual siempre y cuando correspondan a un sistema __CentOS 7__ o __RedHat Enterprise Linux 7__. Tambien pueden ser modificadas las espcificaciones de las base de datos siempre y cuando correspondan a una base de datos MySQL.
-```
+```yaml
 # $REPO_ROOT/ansible/aws/group_vars/all
 ...
 ec2_instance_type: t2.micro
@@ -82,13 +83,13 @@ db_password: default1
 ```
 
 8. Ejecuta la creación de la instancia de la base de datos
-```
+```shell
 cd $REPO_ROOT/ansible/aws/
 ansible-playbook -v rds.yml
 ```
 
 9. Ejecuta la creación de las maquinas virtuales
-```
+```shell
 cd $REPO_ROOT/ansible/aws/
 ansible-playbook -v ec2.yml
 ```
@@ -96,7 +97,7 @@ ansible-playbook -v ec2.yml
 10. Modifica las variables usadas como parametros de entrada para los playbooks de Ansible [aquí](modifications.md)
 
 11. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Solr haciendo uso del inventario dinamico de Ansible para AWS
-```
+```shell
 cd $REPO_ROOT/ansible/
 ansible-playbook -i ../aws/invetory/ec2.py -v solr.yml
 ansible-playbook -i ../aws/invetory/ec2.py -v appserver.yml
@@ -122,7 +123,7 @@ __EC2ResponseError: 401 Unauthorized__
 Empieza por verifica que tu access key y secret. Si no has especificado esas entradas de manera correcto, prosigue a
 verificar que la hora y la fecha esten sincronizadas - debes ejecutar el siguiente comando desde la "Control Machine":
 
-```
+```shell
 sudo ntpdate time.apple.com
 ```
 
@@ -130,7 +131,7 @@ __Permissions 0644 for 'sshkey/millave.pem' are too open__
 
 Modifica los permisos para el archivo que contiene tu llave:
 
-```
+```shell
 sudo chmod 600 sshkey/millave.pem
 ```
 

@@ -13,12 +13,12 @@ El proyecto entrega una automatización de referencia de un conjunto de maquinas
 ## Procedimiento
 
 1. Descarga el repositorio
-```
+```shell
 git clone https://github.com/jaraujoduarte/cocrea-geonetwork.git
 ```
 
 2. Ejecute el despliegue de la infraestructura
-```
+```shell
 # $REPO_ROOT
 cd vagrant
 vagrant up
