@@ -34,7 +34,7 @@ Después de ingresar a EC2 seleccionamos “instances” y nos muestra las insta
 <div style="text-align:center"><img src ="doc/img/5.1.png" /></div>
 
 En la información que se muestra Security groups en la opción “view inbound rules” como lo muestra la imagen.
-<div style="text-align:center"><img src ="doc/img/5.2.png" /></div>
+<div style="text-align:center"><img src ="doc/img/5.2.PNG" /></div>
 
 # Pasos para crear y verificar "SSH key pairs" llaves SSH
 
@@ -61,7 +61,7 @@ Y buscamos el archivo en la carpeta donde la tenemos guardada en nuestro equipo 
 
 Para accedes por ssh a una instancias EC2 se debe realizar por medio de la ip privada de la instancia
 la cual encontramos accediendo a la instancia en la etiqueta descripción como lo muestra la imagen
-<div style="text-align:center"><img src ="doc/img/7.png" /></div>
+<div style="text-align:center"><img src ="doc/img/7.PNG" /></div>
 
 
 Luego de obtener la ip, abrimos una terminal en el equipo desde el cual se va acceder a la instancia, 
