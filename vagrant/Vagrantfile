@@ -184,6 +184,7 @@ else # aws conditional
         ansible.extra_vars = {
           i_deployment_type: "aws",
           i_tomcat_pkg_url: input_values["i_tomcat_pkg_url"],
+          i_tomcat_pkg_version: input_values["i_tomcat_pkg_version"],
           i_geonetwork_pkg_url: input_values["i_geonetwork_pkg_url"],
           i_db_endpoint: input_values["i_db_endpoint"]
         }
