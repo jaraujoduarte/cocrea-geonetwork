@@ -2,7 +2,7 @@ tomcat:
   # 'no' means that the installation package will be copied from the Ansible controller machine
   # 'yes' means that the package is already on the appsever or that the download wil be executed from the appserver
   remote: yes
-  version: apache-tomcat-7.0.78
+  version: "{{ tomcat_pkg_version }}"
   home: /opt/tomcat
   java_vm_ms: 1024M
   java_vm_mx: 1024M
