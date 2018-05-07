@@ -1,8 +1,14 @@
 deployment_type: "{{ i_deployment_type | default('local') }}"
 
-# If deployment_type == aws
-db_endpoint: "{{ i_db_endpoint | default('') }}"
+# Default download information
+def_tomcat_pkg_url: "http://mirrors.supportex.net/apache/tomcat/tomcat-7/v7.0.86/bin/apache-tomcat-7.0.86.tar.gz"
+def_tomcat_pkg_version: "apache-tomcat-7.0.86"
+def_geonetwork_pkg_url: "http://datapacket.dl.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v3.4.2/geonetwork.war"
 
-tomcat_pkg_url: "{{ i_tomcat_pkg_url | default('') }}"
-tomcat_pkg_version: "{{ i_tomcat_pkg_version | default('') }}"
-geonetwork_pkg_url: "{{ i_geonetwork_pkg_url | default('http://downloads.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v3.2.1/geonetwork.war') }}"
+db_endpoint: "{{ (deployment_type == 'aws') | ternary(i_db_endpoint, hostvars[groups['tag_Name_dbserver'][0]]['ansible_host']) }}"
+solr_host: "{{ (deployment_type == 'aws') | ternary(hostvars[groups['tag_Name_solrserver'][0]]['ec2_private_dns_name'], hostvars[groups['tag_Name_solrserver'][0]]['ansible_host']) }}"
+appserver_host: "{{ (deployment_type == 'aws') | ternary(hostvars[groups['tag_Name_appserver'][0]]['ec2_private_dns_name'], hostvars[groups['tag_Name_appserver'][0]]['ansible_host']) }}"
+
+tomcat_pkg_url: "{{ i_tomcat_pkg_url | default(def_tomcat_pkg_url) }}"
+tomcat_pkg_version: "{{ i_tomcat_pkg_version | default(def_tomcat_pkg_version) }}"
+geonetwork_pkg_url: "{{ i_geonetwork_pkg_url | default(def_geonetwork_pkg_url) }}"

@@ -13,10 +13,10 @@
     - mysql
   become: true
 
-- hosts: tag_Name_appserver
+- hosts: all
   roles:
-    - appserver
-    - geonetwork
+    - {role: appserver, when: "'tag_Name_appserver' in group_names"}
+    - {role: geonetwork, when: "'tag_Name_appserver' in group_names"}
   become: true
 
 - hosts: tag_Name_webserver

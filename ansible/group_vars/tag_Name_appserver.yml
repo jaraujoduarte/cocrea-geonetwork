@@ -31,7 +31,7 @@ geonetwork:
     name: mysql
     username: defaultuser
     password: default1
-    host: "{{ (deployment_type == 'local') | ternary('10.0.0.22', db_endpoint) }}"
+    host: "{{ db_endpoint }}"
     # current version of geonetwork ignores this - port hard coded
     port: 3306
     database: geonetworkdb
@@ -43,5 +43,5 @@ geonetwork:
     # database: /geohome/geonetworkdb
   solr:
     # Should match the information on group_vars/solrservers
-    url: "{{ 'http://10.0.0.22:8983' if deployment_type == 'local' else 'http://' + hostvars[groups['tag_Name_solrserver'][0]]['ec2_private_dns_name'] + ':8983' }}"
+    url: "http://{{ solr_host }}:8983"
     collection: collection1
