@@ -1,25 +1,8 @@
 ---
-- hosts: tag_Name_solrserver
-  pre_tasks:
-    - name: Install Java
-      yum: name="java-1.8.0-openjdk.x86_64" state=present
-      become: true
-  roles:
-    - solr
-  become: true
+- import_playbook: solr.yml
 
-- hosts: tag_Name_dbserver
-  roles:
-    - mysql
-  become: true
+- import_playbook: db.yml
 
-- hosts: all
-  roles:
-    - {role: appserver, when: "'tag_Name_appserver' in group_names"}
-    - {role: geonetwork, when: "'tag_Name_appserver' in group_names"}
-  become: true
+- import_playbook: appserver.yml
 
-- hosts: tag_Name_webserver
-  roles:
-    - webserver
-  become: true
+- import_playbook: webserver.yml

@@ -3,3 +3,4 @@ ansible/**/*.retry
 ansible/aws/sshkey/*.pem
 **/.DS_Store
 tmp
+Vagrantfile
