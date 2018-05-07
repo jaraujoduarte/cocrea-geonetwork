@@ -44,12 +44,12 @@ git clone https://github.com/jaraujoduarte/cocrea-geonetwork.git
 
 2. Edita el archivo de inventario para Ansible si es necesario (ej: Si es una instalación multi-nodo), incluyendo los argumentos de la conexión de Ansible a tu(s) maquina(s) destino.
 ```shell
-$REPO_ROOT/onpremise/inventory.ini
+$REPO_ROOT/ansible/onpremise/inventory.ini
 ```
 
 3. Edita los argumentos de descarga de los paquetes de Tomcat y Geonetwork:
 ```yaml
-$REPO_ROOT/onpremise/group_vars/all.yml
+$REPO_ROOT/ansible/group_vars/all.yml
 
 # Default download information
 def_tomcat_pkg_url: "http://mirrors.supportex.net/apache/tomcat/tomcat-7/v7.0.86/bin/apache-tomcat-7.0.86.tar.gz"
