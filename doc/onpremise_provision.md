@@ -11,6 +11,8 @@ En esta versión del despliegue, se utilizan maquina On-Premise y aplica para in
 
 * Maquinas destino deben ser CentOS o RHEL
 
+* Conexión a internet en los nodos destino
+
 
 ## Preparar "Control Machine"
 
