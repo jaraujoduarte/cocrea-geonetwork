@@ -1,6 +1,6 @@
 # cocrealabs-geonetwork
 
-El proyecto cocrea-geonetwork tiene como objetivo la automatización del despliegue de la aplicación [Geonetwork](http://geonetwork-opensource.org/) en diferentes tipos de infraestructura destino. Hasta el momento, son soportadas una versión del despliegue para [AWS](https://aws.amazon.com/) y una para [Vagrant/Virtualbox](https://www.vagrantup.com/docs/index.html).
+El proyecto cocrea-geonetwork tiene como objetivo la automatización del despliegue de la aplicación [Geonetwork](http://geonetwork-opensource.org/) en diferentes tipos de infraestructura destino. Hasta el momento, son soportadas una versión del despliegue para [AWS](https://aws.amazon.com/), una para [Vagrant/Virtualbox](https://www.vagrantup.com/docs/index.html), y OnPremise.
 
 ## Arquitectura
 
@@ -37,6 +37,9 @@ Dependiendo de las necesidades se puede hacer uso de una de las versiones del de
 
 ### Local (Vagrant/Virtualbox)
 Para ejecutar el despliegue local siga las instrucciones [aquí](doc/vagrant_provision.md)
+
+### OnPremise
+Para ejecutar el despliegue OnPremise siga las instrucciones [aquí](doc/onpremise_provision.md)
 
 ### AWS
 Para la opción de despliegue en AWS, en esta documentación se presentan dos opciones: __"manual"__ o __"simple"__. La opción __"manual"__ esta orientada a usuarios con una experticia mayor en las tecnologías utilizadas y por lo general con deseos de realizar cambios no triviales a la configuración (via codigo). Por otro lado la opción __"simple"__ despliega la infraestructura con los valores sugeridos por defecto.
