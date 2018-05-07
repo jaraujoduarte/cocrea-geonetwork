@@ -3,7 +3,7 @@
   connection: local
   gather_facts: false
   tasks:
-    - name: "Creación del grupo de parametros para MySQL"
+    - name: Create parameters group for MySQL
       rds_param_group:
         region: "{{ m_region }}"
         state: present
@@ -13,7 +13,7 @@
         params:
           lower_case_table_names: "1"
 
-    - name: Aprovisionamiento de la base de datos
+    - name: Provisioning of database
       rds:
         #wait: true
         command: create

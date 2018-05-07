@@ -27,7 +27,7 @@
         path: "./sshkey/geonetwork.pem"
         mode: '600'
 
-    - name: Creación ec2 group para acceso ssh y otros defaults
+    - name: Create ec2 group for SSH and other defaults
       ec2_group:
         name: geonetwork-default
         region: "{{ m_region }}"
@@ -38,7 +38,7 @@
             to_port: 22
             cidr_ip: 0.0.0.0/0
 
-    - name: Creación ec2 group para acceso al servidor web
+    - name: Create ec2 group for Web Server
       ec2_group:
         name: geonetwork-webserver
         region: "{{ m_region }}"
@@ -49,7 +49,7 @@
             to_port: 443
             cidr_ip: 0.0.0.0/0
 
-    - name: Aprovisionamiento servidor de aplicaciones
+    - name: Provisioning of Application Server
       ec2:
          # Can be uncommented for idempotency but it works only after 24h of the last run
          #id: appserver1
@@ -67,7 +67,7 @@
       register: ec2
       when: groups['tag_Name_webserver'] is undefined
 
-    - name: Aprovisionamiento servidor Solr
+    - name: Provisioning of Solr Server
       ec2:
          #id: solrserver1
          region: "{{ m_region }}"
@@ -84,7 +84,7 @@
       register: ec2
       when: groups['tag_Name_webserver'] is undefined
 
-    - name: Aprovisionamiento servidor web
+    - name: Provisioning of Web Server
       ec2:
          #id: webserver1
          region: "{{ m_region }}"
