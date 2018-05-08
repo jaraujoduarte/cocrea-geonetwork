@@ -41,13 +41,18 @@ Sigue los siguientes pasos desde la "Control Machine":
 ```shell
 git clone https://github.com/jaraujoduarte/cocrea-geonetwork.git
 ```
+2. Instala los roles de Ansible declarados como depedencias:
+```shell
+cd $REPO_ROOT
+ansible-galaxy install -r requirements.yml
+```
 
-2. Edita el archivo de inventario para Ansible si es necesario (ej: Si es una instalación multi-nodo), incluyendo los argumentos de la conexión de Ansible a tu(s) maquina(s) destino.
+3. Edita el archivo de inventario para Ansible si es necesario (ej: Si es una instalación multi-nodo), incluyendo los argumentos de la conexión de Ansible a tu(s) maquina(s) destino.
 ```shell
 $REPO_ROOT/ansible/onpremise/inventory.ini
 ```
 
-3. Edita los argumentos de descarga de los paquetes de Tomcat y Geonetwork:
+4. Edita los argumentos de descarga de los paquetes de Tomcat y Geonetwork:
 ```yaml
 $REPO_ROOT/ansible/group_vars/all.yml
 
@@ -57,15 +62,15 @@ def_tomcat_pkg_version: "apache-tomcat-7.0.86"
 def_geonetwork_pkg_url: "http://datapacket.dl.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v3.4.2/geonetwork.war"
 ```
 
-4. Modifica las variables usadas como parametros de entrada para los playbooks de Ansible (en caso de ser necesario) [aquí](modifications.md).
+5. Modifica las variables usadas como parametros de entrada para los playbooks de Ansible (en caso de ser necesario) [aquí](modifications.md).
 
-5. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Solr haciendo uso del inventario:
+6. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Solr haciendo uso del inventario:
 ```shell
 cd $REPO_ROOT/ansible/
 ansible-playbook -i ../onpremise/invetory.ini -v allin_local.yml
 ```
 
-6. Suponiendo que "192.168.1.2" fuera la ip del Servidor Web, acceda a Geonetwork a traves de la URL https://192.168.1.2/geonetwork
+7. Suponiendo que "192.168.1.2" fuera la ip del Servidor Web, acceda a Geonetwork a traves de la URL https://192.168.1.2/geonetwork
 
 ## Solución de problemas
 A continuación hay una lista de los posibles problemas junto con soluciones, que podras encontrar al ejecutar el aprovisionamiento.
