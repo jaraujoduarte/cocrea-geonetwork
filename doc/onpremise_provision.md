@@ -24,6 +24,7 @@ A continuación se explican en mas detalles los requerimientos de la maquina:
 * Información actualizada acerca de las distribuciones de Linux soportadas puede ser encontrada [aquí](http://docs.ansible.com/ansible/intro_installation.html#control-machine-requirements).
 * Paquetes y software:
   * Python 2.* (por lo general viene en la distribución de Linux)
+  * Git (para descargar depedencias)
   * [Ansible 2.2+](http://docs.ansible.com/ansible/intro_installation.html)
 * Verificar que la "Control Machine" tiene acceso a las maquinas destino a traves de SSH (en caso de instalación multi-nodo o si la Control Machine no es el mismo nodo-unico).
 
