@@ -67,7 +67,7 @@
       register: ec2
       when: groups['tag_Name_webserver'] is undefined
 
-    - name: Provisioning of Solr Server
+    - name: Provisioning of Elasticsearch Server
       ec2:
          #id: solrserver1
          region: "{{ m_region }}"
@@ -80,7 +80,7 @@
          count_tag:
             Name: geovm
          instance_tags:
-            Name: solrserver
+            Name: elasticsearchserver
       register: ec2
       when: groups['tag_Name_webserver'] is undefined
 

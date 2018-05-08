@@ -6,7 +6,7 @@ require 'yaml'
 opts = GetoptLong.new(
   [ '--aws', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--appserver', GetoptLong::OPTIONAL_ARGUMENT ],
-  [ '--solrserver', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--elasticsearchserver', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--webserver', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--dbserver', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--infra', GetoptLong::OPTIONAL_ARGUMENT ],
@@ -16,7 +16,7 @@ opts = GetoptLong.new(
 
 provision_aws=false
 provision_appserver=false
-provision_solrserver=false
+provision_elasticsearchserver=false
 provision_webserver=false
 provision_geonetwork=false
 provision_dbserver=false
@@ -29,8 +29,8 @@ opts.each do |opt, arg|
       provision_aws=true
   when '--appserver'
       provision_appserver=true
-  when '--solrserver'
-      provision_solrserver=true
+  when '--elasticsearchserver'
+      provision_elasticsearchserver=true
   when '--webserver'
       provision_webserver=true
   when '--dbserver'
@@ -49,7 +49,7 @@ if [ ! -d "/keys" ]; then
 	sudo mkdir /keys
 fi
 
-nodes=(appserver solrserver webserver)
+nodes=(appserver elasticsearchserver webserver)
 
 for i in "${nodes[@]}"
 do
@@ -81,12 +81,12 @@ if !provision_aws then
 	    appserver.vm.network "private_network", ip: "10.0.0.21"
 	  end
 
-		config.vm.define "solrserver" do |solrserver|
-			solrserver.vm.provider :virtualbox do |vb|
+		config.vm.define "elasticsearchserver" do |elasticsearchserver|
+			elasticsearchserver.vm.provider :virtualbox do |vb|
 				vb.memory = 1024
 		    vb.cpus = 1
 			end
-	    solrserver.vm.network "private_network", ip: "10.0.0.22"
+	    elasticsearchserver.vm.network "private_network", ip: "10.0.0.22"
 	  end
 
 		config.vm.define "webserver" do |webserver|
@@ -118,8 +118,8 @@ if !provision_aws then
 
         if provision_appserver then
           ansible.playbook = "appserver.yml"
-        elsif provision_solrserver then
-          ansible.playbook = "solr.yml"
+        elsif provision_elasticsearchserver then
+          ansible.playbook = "elasticsearch.yml"
         elsif provision_webserver then
           ansible.playbook = "webserver.yml"
         elsif provision_dbserver then
@@ -191,8 +191,8 @@ else # aws conditional
 
         if provision_appserver then
           ansible.playbook = "appserver.yml"
-        elsif provision_solrserver then
-          ansible.playbook = "solr.yml"
+        elsif provision_elasticsearchserver then
+          ansible.playbook = "elasticsearch.yml"
         elsif provision_webserver then
           ansible.playbook = "webserver.yml"
         elsif provision_geonetwork then

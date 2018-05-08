@@ -23,8 +23,8 @@
       wait_for: port=22 host="{{ hostvars[groups['tag_Name_appserver'][0]]['ec2_public_dns_name'] }}"
       connection: local
 
-    - name: Waiting for SSH to be available on Solr Server
-      wait_for: port=22 host="{{ hostvars[groups['tag_Name_solrserver'][0]]['ec2_public_dns_name'] }}"
+    - name: Waiting for SSH to be available on Elasticsearch Server
+      wait_for: port=22 host="{{ hostvars[groups['tag_Name_elasticsearchserver'][0]]['ec2_public_dns_name'] }}"
       connection: local
 
     - name: Waiting for SSH to be available on Web Server
