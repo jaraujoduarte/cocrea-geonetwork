@@ -5,3 +5,7 @@
 - src: https://github.com/geerlingguy/ansible-role-solr
   version: master
   name: solr
+
+- src: https://github.com/elastic/ansible-elasticsearch
+  version: master
+  name: elasticsearch

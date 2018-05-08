@@ -48,10 +48,10 @@
     src: jdbc.properties.j2
     dest: "{{ geonetwork['tomcat_dir'] }}/WEB-INF/config-db/jdbc.properties"
 
-- name: Copy config-solr.properties
+- name: Copy config.properties
   template:
-    src: config-solr.properties.j2
-    dest: "{{ geonetwork['tomcat_dir'] }}/WEB-INF/config-solr.properties"
+    src: config.properties.j2
+    dest: "{{ geonetwork['tomcat_dir'] }}/WEB-INF/config.properties"
 
 - name: Copy log4j.xml
   template:

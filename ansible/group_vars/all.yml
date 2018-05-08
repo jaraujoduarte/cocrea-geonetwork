@@ -7,6 +7,7 @@ def_geonetwork_pkg_url: "http://datapacket.dl.sourceforge.net/project/geonetwork
 
 db_endpoint: "{{ (deployment_type == 'aws') | ternary(i_db_endpoint, hostvars[groups['tag_Name_dbserver'][0]]['ansible_host']) }}"
 solr_host: "{{ (deployment_type == 'aws') | ternary(hostvars[groups['tag_Name_solrserver'][0]]['ec2_private_dns_name'], hostvars[groups['tag_Name_solrserver'][0]]['ansible_host']) }}"
+es_host: "{{ (deployment_type == 'aws') | ternary(hostvars[groups['tag_Name_elasticsearchserver'][0]]['ec2_private_dns_name'], hostvars[groups['tag_Name_elasticsearchserver'][0]]['ansible_host']) }}"
 appserver_host: "{{ (deployment_type == 'aws') | ternary(hostvars[groups['tag_Name_appserver'][0]]['ec2_private_dns_name'], hostvars[groups['tag_Name_appserver'][0]]['ansible_host']) }}"
 
 tomcat_pkg_url: "{{ i_tomcat_pkg_url | default(def_tomcat_pkg_url) }}"

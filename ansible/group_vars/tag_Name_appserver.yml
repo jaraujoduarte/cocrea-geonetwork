@@ -45,3 +45,5 @@ geonetwork:
     # Should match the information on group_vars/solrservers
     url: "http://{{ solr_host }}:8983"
     collection: collection1
+  es:
+    url: "http://{{ es_host }}:9200"
