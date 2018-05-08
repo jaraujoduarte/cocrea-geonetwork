@@ -5,5 +5,5 @@
       yum: name="java-1.8.0-openjdk.x86_64" state=present
       become: true
   roles:
-    - elasticsearch
+    - { role: elasticsearch, es_instance_name: "node1"}
   become: true
