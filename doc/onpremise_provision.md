@@ -68,7 +68,7 @@ def_geonetwork_pkg_url: "http://datapacket.dl.sourceforge.net/project/geonetwork
 6. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Solr haciendo uso del inventario:
 ```shell
 cd $REPO_ROOT/ansible/
-ansible-playbook -i ../onpremise/invetory.ini -v allin_local.yml
+ansible-playbook -i onpremise/invetory.ini -v allin_local.yml
 ```
 
 7. Suponiendo que "192.168.1.2" fuera la ip del Servidor Web, acceda a Geonetwork a traves de la URL https://192.168.1.2/geonetwork
