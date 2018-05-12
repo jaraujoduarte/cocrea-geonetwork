@@ -5,4 +5,4 @@ Para realizar modificaciones a los archivos de variables usados por los roles de
 - Bases de datos local -> [ansible/group_vars/tag_Name_dbserver](../ansible/group_vars/tag_Name_dbserver.yml)
 - Servidor de aplicaciones -> [ansible/group_vars/tag_Name_appserver](../ansible/group_vars/tag_Name_appserver.yml)
 - Servidor Web -> [ansible/group_vars/tag_Name_webserver](../ansible/group_vars/tag_Name_webserver.yml)
-- Servidor Solr -> [ansible/group_vars/tag_Name_solrserver](../ansible/group_vars/tag_Name_solrserver.yml)
+- Servidor Elasticsearch -> [ansible/group_vars/tag_Name_elasticsearchserver](../ansible/group_vars/tag_Name_elasticsearchserver.yml)

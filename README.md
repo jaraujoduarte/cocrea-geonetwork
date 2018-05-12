@@ -10,7 +10,7 @@ La arquitectura propuesta para el despliegue tiene en cuenta los siguientes comp
 
 * __Servidor (o servicio en el caso de AWS) de bases de datos__ - a ser usada para persistencia de parte de la mayor parte datos funcionales de Geonetwork
 
-* __Servidor solr__ - alberga solr, un software de indexamiento necesario para la funcionalidad de Geonetwork que permite el [analisis de datos WFS](http://geonetwork-opensource.org/manuals/3.0.5/eng/users/user-guide/analyzing/data.html#analyzing-data)
+* __Servidor Elasticsearch__ - alberga Elasticsearch, un software de indexamiento necesario para la funcionalidad de Geonetwork que permite el [analisis de datos WFS](https://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/analyzing/data.html#analyzing-data)
 
 * __Servidor web__ - sirve como proxy a la infraestructura, exponiendo solo lo necesario para acceder a la aplicación a traves del navegador de manera "segura"
 
@@ -26,7 +26,7 @@ Las tecnologías utilizadas varian en su naturaleza y aplicación (servidor de a
 
 * [Apache Tomcat](https://tomcat.apache.org/) - Servidor de aplicaciones
 * [Apache Http Server](https://httpd.apache.org/) - Servidor Web
-* [Solr](http://lucene.apache.org/solr/) - Software de indexamiento
+* [Elasticsearch](https://www.elastic.co/products/elasticsearch) - Software de indexamiento
 * [MySQL](https://www.mysql.com/) - Base de datos
 * [Ansible](https://www.ansible.com/) - Automated Configuration Management
 * [Vagrant](https://www.vagrantup.com/intro/index.html) - Herramienta para la creacion de ambientes virtuales

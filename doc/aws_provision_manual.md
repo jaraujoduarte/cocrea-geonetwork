@@ -96,10 +96,10 @@ ansible-playbook -v ec2.yml
 
 10. Modifica las variables usadas como parametros de entrada para los playbooks de Ansible [aquí](modifications.md)
 
-11. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Solr haciendo uso del inventario dinamico de Ansible para AWS
+11. Ejecuta el despliegue de los Servidores de Aplicaciones, Web y Elasticsearch haciendo uso del inventario dinamico de Ansible para AWS
 ```shell
 cd $REPO_ROOT/ansible/
-ansible-playbook -i ../aws/invetory/ec2.py -v solr.yml
+ansible-playbook -i ../aws/invetory/ec2.py -v elasticsearch.yml
 ansible-playbook -i ../aws/invetory/ec2.py -v appserver.yml
 ansible-playbook -i ../aws/invetory/ec2.py -v webserver.yml
 ```
